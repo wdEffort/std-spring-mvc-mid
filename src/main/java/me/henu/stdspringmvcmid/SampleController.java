@@ -1,10 +1,20 @@
 package me.henu.stdspringmvcmid;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
+/**
+ * Class 레벨에 @RequestMapping을 지정하면 공통적인 요청 처리를 담당하게 됨
+ * - 해당 컨트롤러는 특정 URL로 시작되는 요청을 처리하거나,
+ * - 특정 HTTP Method 요청을 처리함
+ */
+
 @Controller
+@RequestMapping(method = RequestMethod.GET) // 해당 컨트롤러는 GET 요청만 받게 됨
 public class SampleController {
 
     /**
@@ -37,7 +47,7 @@ public class SampleController {
      * @return
      * @GetMapping GET 요청 처리를 하는 어노테이션
      */
-    @GetMapping("/hello")
+    @RequestMapping("/hello")
     @ResponseBody
     public String hello() {
         return "hello";
