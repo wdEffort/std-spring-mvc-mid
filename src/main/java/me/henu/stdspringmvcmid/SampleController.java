@@ -2,8 +2,6 @@ package me.henu.stdspringmvcmid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -39,7 +37,7 @@ public class SampleController {
      * @return
      * @GetMapping GET 요청 처리를 하는 어노테이션
      */
-    @GetMapping
+    @GetMapping("/hello")
     @ResponseBody
     public String hello() {
         return "hello";

@@ -9,7 +9,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -41,7 +40,7 @@ public class SampleControllerTest {
     public void helloPostRequestTest() throws Exception {
         this.mockMvc.perform(post("/hello"))
                 .andDo(print())
-                .andExpect(status().isOk()); // 요청이 잘못되었는지 확인
+                .andExpect(status().isMethodNotAllowed()); // 요청이 잘못되었는지 확인
     }
 
     /**
