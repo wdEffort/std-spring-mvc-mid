@@ -1,6 +1,7 @@
 package me.henu.stdspringmvcmid;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,9 +37,9 @@ public class SampleController {
      * Idemponent
      *
      * @return
-     * @RequestMapping 어노테이션에 Method(GET, POST, PUT, DELETE, ... )를 지정하지 않으면 모든 요청을 받아 들임
+     * @GetMapping GET 요청 처리를 하는 어노테이션
      */
-    @RequestMapping(value = "/hello", method = {RequestMethod.GET, RequestMethod.POST}) // GET 요청만 혀용
+    @GetMapping
     @ResponseBody
     public String hello() {
         return "hello";
