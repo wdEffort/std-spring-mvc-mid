@@ -1,40 +1,33 @@
 package me.henu.stdspringmvcmid;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
-/**
- * Class 레벨에 @RequestMapping을 지정하면 공통적인 요청 처리를 담당하게 됨
- * - 해당 컨트롤러는 특정 URL로 시작되는 요청을 처리하거나,
- * - 특정 HTTP Method 요청을 처리함
- */
-
 @Controller
-@RequestMapping("/hello") // 공통 적으로 처리할 URL 매핑
 public class SampleController {
 
     /**
-     * [URI 확장자 매핑 지원]
-     * Spring MVC는 아래와 같이 "/henu"로 매핑을 하면, 암묵적으로 "/henu.*"과 같은 매핑을 해줌
-     * (henu.json, henu.html, henu.xml, ... )
-     * 하지만 Spring Boot와 최신 버전의 Spring에서는 이 기능을 기본적으로 사용하지 않도록 설정이 되어있음(=> RFD Attack 보안 이슈 관련)
-     * <p>
-     * [URI 확장자 매핑을 사용할 때 단점]
-     * URI 변수, Path 매개변수, URI 인코딩을 사용할 때 불명확 함.
-     * 예전에는 특정한 응답 타입을 지정하기 위해 "/henu.json", "/henu.xml"과 같이 사용했다면
-     * 최근에는 요청 헤더(Accept Header)에 응답 타입을 설정하는 방식으로 사용을 함.(Header에 들어 있는 내용을 가지고 판단)
+     * Content-Type 매핑(=> Content-Type Header로 필터링을 진행함.)
      *
      * @return
+     * @RequestMapping "consumes" 속성을 이용하면 특정 타입의 데이터를 담고 있는 요청만 처리하게 됨(요청과 매치되지 않는 경우 415).
+     * "produces" 속성을 이용하면 특정 타입의 응답을 만들게 됨(요청과 매치되지 않는 경우 406).
+     * 단, "produces"는 Accept Header가 없는 경우에도 매핑이 됨.
+     * <p>
+     * 각 속성값을 지정할 때 "application/json"과 같은 문자열을 입력해도 되지만,
+     * org.springframework.http가 제공하는 MediaType을 사용하면 상수로 표기되어 있기 때문에 편리함.
      */
-    @RequestMapping("/henu")
-    // @RequestMapping({"/henu", "/henu.*"})
+    @RequestMapping(
+            value = "/hello",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, // JSON 데이터를 담고 있는 요청만 처리
+            produces = MediaType.TEXT_PLAIN_VALUE //
+    )
     @ResponseBody
-    public String helloHenu() {
-        return "hello henu";
+    public String hello() {
+        return "hello";
     }
 
 }
