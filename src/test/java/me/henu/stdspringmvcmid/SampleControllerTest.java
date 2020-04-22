@@ -20,7 +20,7 @@ public class SampleControllerTest {
     MockMvc mockMvc;
 
     /**
-     * GET 요청 테스트
+     * 여러 GET 요청 테스트
      *
      * @throws Exception
      */
@@ -28,30 +28,11 @@ public class SampleControllerTest {
     public void helloGetRequestTest() throws Exception {
         this.mockMvc.perform(get("/hello"))
                 .andDo(print())
-                .andExpect(status().isOk()); // 요청이 잘 처리 되었는지 확인
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(get("/hi"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
-    /**
-     * POST 요청 테스트
-     *
-     * @throws Exception
-     */
-    @Test
-    public void helloPostRequestTest() throws Exception {
-        this.mockMvc.perform(post("/hello"))
-                .andDo(print())
-                .andExpect(status().isMethodNotAllowed()); // 요청이 잘못되었는지 확인
-    }
-
-    /**
-     * DELETE 요청 테스트
-     *
-     * @throws Exception
-     */
-    @Test
-    public void helloDeleteRequestTest() throws Exception {
-        this.mockMvc.perform(delete("/hello"))
-                .andDo(print())
-                .andExpect(status().isMethodNotAllowed()); // 요청이 잘못되었는지 확인
-    }
 }
