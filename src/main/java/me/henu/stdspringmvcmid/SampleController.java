@@ -15,17 +15,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class SampleController {
 
-    /**
-     * 여러 요청 매핑
-     * 배열 형태로 URL을 지정해주면 됨
-     *
-     * @return
+    /*
+     [요청 식별자(패턴)로 매핑하기]
+     ? : 한글자("/hello/???" => "/hello/lee")
+     * : 여러 글자("/hello/*" => "/hello/henunim")
+     ** : 여러 패스 ("/hello/**" => "/hello/henu/info")
      */
-    @GetMapping({"/hello", "/hi"})
+
+    @GetMapping("/hello/?")
     @ResponseBody
-    public String hello() {
+    public String helloPattern1() {
         return "hello";
     }
 
+    @GetMapping("/hello/*")
+    @ResponseBody
+    public String helloPattern2() {
+        return "hello";
+    }
+
+    @GetMapping("/hello/**")
+    @ResponseBody
+    public String helloPattern3() {
+        return "hello";
+    }
 
 }
