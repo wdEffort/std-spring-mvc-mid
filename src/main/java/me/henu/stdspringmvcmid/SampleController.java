@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+// Class 레벨에서 consumes 또는 produces 설정하였고
+// 메소드에도 consumes 또는 produces를 설정했다면 조합이 되지 않고, 메소드 설정으로 덮어쓰게 됨.
+@RequestMapping(consumes = MediaType.APPLICATION_XML_VALUE)
 public class SampleController {
 
     /**
