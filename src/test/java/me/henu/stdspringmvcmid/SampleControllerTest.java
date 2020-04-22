@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -19,11 +20,17 @@ public class SampleControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    /**
+     * 정규 표현식을 이용한 요청 매핑 테스트
+     *
+     * @throws Exception
+     */
     @Test
     public void helloTest() throws Exception {
         this.mockMvc.perform(get("/hello/henu/info"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string("hello henu info"));
     }
 
 }

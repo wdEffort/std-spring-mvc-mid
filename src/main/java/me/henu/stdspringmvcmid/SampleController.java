@@ -2,6 +2,7 @@ package me.henu.stdspringmvcmid;
 
 import org.springframework.stereotype.Controller;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -16,10 +17,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/hello") // 공통 적으로 처리할 URL 매핑
 public class SampleController {
 
-    @RequestMapping("/**")
+    /**
+     * 정규 표현식을 사용한 요청 매핑
+     *
+     * @return
+     * @PathVariable 어노테이션을 사용하면 URL Path(경로)에 들어있는 값을 꺼내서 쓸 수 있음
+     */
+    @RequestMapping("/{name:[a-z]+}/{value:[a-z]+}") // 알파벳 a ~ z까지 해당하는 요청을 매핑
     @ResponseBody
-    public String hello() {
-        return "hello";
+    public String hello(@PathVariable String name, @PathVariable String value) {
+        return "hello " + name + " " + value;
     }
 
 }
