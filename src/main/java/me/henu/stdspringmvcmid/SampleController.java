@@ -25,8 +25,22 @@ public class SampleController {
      */
     @RequestMapping("/{name:[a-z]+}/{value:[a-z]+}") // 알파벳 a ~ z까지 해당하는 요청을 매핑
     @ResponseBody
-    public String hello(@PathVariable String name, @PathVariable String value) {
-        return "hello " + name + " " + value;
+    public String regExp(@PathVariable String name, @PathVariable String value) {
+        return name + " " + value;
+    }
+
+    /**
+     * 요청 패턴이 중복되는 경우 구체적으로 매핑되는 핸들러가 선택됨.
+     * <p>
+     * "/hello/henu/info"로 요청을 보내게 되면 hi() 메소드가 아닌,
+     * 좀 더 구체적으로 매핑이 된 regExp() 메소드가 동작하게 된다.
+     *
+     * @return
+     */
+    @RequestMapping("/**")
+    @ResponseBody
+    public String hi() {
+        return "hello";
     }
 
 }

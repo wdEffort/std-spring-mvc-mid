@@ -9,8 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @RunWith(SpringRunner.class)
@@ -26,11 +25,13 @@ public class SampleControllerTest {
      * @throws Exception
      */
     @Test
-    public void helloTest() throws Exception {
+    public void regExpTest() throws Exception {
         this.mockMvc.perform(get("/hello/henu/info"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("hello henu info"));
+                .andExpect(content().string("henu info"))
+                .andExpect(handler().handlerType(SampleController.class)) // 핸들러 타입이 SampleController인지 확인
+                .andExpect(handler().methodName("regExp")); // 핸들러 메소드 이름이 regExp인지 확인
     }
 
 }
