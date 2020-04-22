@@ -2,7 +2,7 @@ package me.henu.stdspringmvcmid;
 
 import org.springframework.stereotype.Controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
@@ -13,30 +13,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 
 @Controller
+@RequestMapping("/hello") // 공통 적으로 처리할 URL 매핑
 public class SampleController {
 
-    /*
-     [요청 식별자(패턴)로 매핑하기]
-     ? : 한글자("/hello/???" => "/hello/lee")
-     * : 여러 글자("/hello/*" => "/hello/henunim")
-     ** : 여러 패스 ("/hello/**" => "/hello/henu/info")
-     */
-
-    @GetMapping("/hello/?")
+    @RequestMapping("/**")
     @ResponseBody
-    public String helloPattern1() {
-        return "hello";
-    }
-
-    @GetMapping("/hello/*")
-    @ResponseBody
-    public String helloPattern2() {
-        return "hello";
-    }
-
-    @GetMapping("/hello/**")
-    @ResponseBody
-    public String helloPattern3() {
+    public String hello() {
         return "hello";
     }
 

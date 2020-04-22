@@ -19,37 +19,8 @@ public class SampleControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    /**
-     * 한글자 요청 매핑 테스트
-     *
-     * @throws Exception
-     */
     @Test
-    public void helloPatternTest1() throws Exception {
-        this.mockMvc.perform(get("/hello/1"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    /**
-     * 여러 글자 요청 매핑 테스트
-     *
-     * @throws Exception
-     */
-    @Test
-    public void helloPatternTest2() throws Exception {
-        this.mockMvc.perform(get("/hello/henu"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    /**
-     * 여러 패쓰 요청 매핑 테스트
-     *
-     * @throws Exception
-     */
-    @Test
-    public void helloPatternTest3() throws Exception {
+    public void helloTest() throws Exception {
         this.mockMvc.perform(get("/hello/henu/info"))
                 .andDo(print())
                 .andExpect(status().isOk());
