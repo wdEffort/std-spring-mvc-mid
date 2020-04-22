@@ -19,19 +19,12 @@ public class SampleControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    /**
-     * 정규 표현식을 이용한 요청 매핑 테스트
-     *
-     * @throws Exception
-     */
     @Test
-    public void regExpTest() throws Exception {
-        this.mockMvc.perform(get("/hello/henu/info"))
+    public void helloHenuTest() throws Exception {
+        this.mockMvc.perform(get("/hello/henu"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("henu info"))
-                .andExpect(handler().handlerType(SampleController.class)) // 핸들러 타입이 SampleController인지 확인
-                .andExpect(handler().methodName("regExp")); // 핸들러 메소드 이름이 regExp인지 확인
+                .andExpect(content().string("hello henu"));
     }
 
 }
