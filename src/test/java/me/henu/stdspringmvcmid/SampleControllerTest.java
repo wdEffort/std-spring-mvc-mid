@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,40 +20,40 @@ public class SampleControllerTest {
     MockMvc mockMvc;
 
     /**
-     * 특정한 Header가 들어 있는 요청 처리 테스트
+     * 특정한 요청 매개변수(Parameter) Key를 가지고 있는 요청 처리 테스트
      *
      * @throws Exception
      */
     @Test
-    public void headerRequestTest() throws Exception {
-        this.mockMvc.perform(get("/header1")
-                .header(HttpHeaders.FROM, "localhost"))
+    public void paramKeyRequestTest() throws Exception {
+        this.mockMvc.perform(get("/param1")
+                .param("name", "henu"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     /**
-     * 설정한 Header가 없는 요청 처리 테스트
+     * 특정한 요청 매개변수(Parameter) Key를 가지고 있는 않는 요청 처리 테스트
      *
      * @throws Exception
      */
     @Test
-    public void headerNotRequestTest() throws Exception {
-        this.mockMvc.perform(get("/header2")
-                .header(HttpHeaders.ACCEPT_LANGUAGE, "en"))
+    public void paramNotKeyRequestTest() throws Exception {
+        this.mockMvc.perform(get("/param2")
+                .param("age", "29"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     /**
-     * 특정한 Header Key&Value가 있는 요청 처리 테스트
+     * 특정한 요청 매개변수(Parameter) Key&Value 가지고 있는 요청 처리 테스트
      *
      * @throws Exception
      */
     @Test
-    public void headerKeyValueRequestTest() throws Exception {
-        this.mockMvc.perform(get("/header3")
-                .header(HttpHeaders.AUTHORIZATION, "123"))
+    public void paramKeyValueRequestTest() throws Exception {
+        this.mockMvc.perform(get("/param3")
+                .param("job", "developer"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

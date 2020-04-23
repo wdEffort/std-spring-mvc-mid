@@ -1,54 +1,52 @@
 package me.henu.stdspringmvcmid;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
-
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class SampleController {
 
     /**
-     * 특정한 Header가 들어 있는 요청 처리
+     * 특정한 요청 매개변수(Parameter) Key를 가지고 있는 요청 처리
      *
      * @return
      */
-    @RequestMapping(
-            value = "/header1",
-            headers = HttpHeaders.FROM
+    @GetMapping(
+            value = "/param1",
+            params = "name"
     )
     @ResponseBody
-    public String headerRequest() {
-        return "header1";
+    public String paramKeyRequest() {
+        return "hello";
     }
 
     /**
-     * 설정한 Header가 없는 요청 처리
+     * 특정한 요청 매개변수(Parameter) Key를 가지고 있는 않는 요청 처리
      *
      * @return
      */
-    @RequestMapping(
-            value = "/header2",
-            headers = "!" + HttpHeaders.FROM
+    @GetMapping(
+            value = "/param2",
+            params = "!name"
     )
     @ResponseBody
-    public String headerNotRequest() {
-        return "header2";
+    public String paramNotKeyRequest() {
+        return "hello";
     }
 
     /**
-     * 특정한 Header Key&Value가 있는 요청 처리
+     * 특정한 요청 매개변수(Parameter) Key&Value 가지고 있는 요청 처리
      *
      * @return
      */
-    @RequestMapping(
-            value = "/header3",
-            headers = HttpHeaders.AUTHORIZATION + "=" + "123"
+    @GetMapping(
+            value = "/param3",
+            params = "job=developer"
     )
     @ResponseBody
-    public String headerKeyValueRequest() {
-        return "header3";
+    public String paramKeyValueRequest() {
+        return "hello";
     }
 
 }
