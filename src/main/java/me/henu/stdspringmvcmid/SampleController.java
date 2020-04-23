@@ -1,36 +1,54 @@
 package me.henu.stdspringmvcmid;
 
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-// Class 레벨에서 consumes 또는 produces 설정하였고
-// 메소드에도 consumes 또는 produces를 설정했다면 조합이 되지 않고, 메소드 설정으로 덮어쓰게 됨.
-@RequestMapping(consumes = MediaType.APPLICATION_XML_VALUE)
 public class SampleController {
 
     /**
-     * Content-Type 매핑(=> Content-Type Header로 필터링을 진행함.)
+     * 특정한 Header가 들어 있는 요청 처리
      *
      * @return
-     * @RequestMapping "consumes" 속성을 이용하면 특정 타입의 데이터를 담고 있는 요청만 처리하게 됨(요청과 매치되지 않는 경우 415).
-     * "produces" 속성을 이용하면 특정 타입의 응답을 만들게 됨(요청과 매치되지 않는 경우 406).
-     * 단, "produces"는 Accept Header가 없는 경우에도 매핑이 됨.
-     * <p>
-     * 각 속성값을 지정할 때 "application/json"과 같은 문자열을 입력해도 되지만,
-     * org.springframework.http가 제공하는 MediaType을 사용하면 상수로 표기되어 있기 때문에 편리함.
      */
     @RequestMapping(
-            value = "/hello",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, // JSON 데이터를 담고 있는 요청만 처리
-            produces = MediaType.TEXT_PLAIN_VALUE //
+            value = "/header1",
+            headers = HttpHeaders.FROM
     )
     @ResponseBody
-    public String hello() {
-        return "hello";
+    public String headerRequest() {
+        return "header1";
+    }
+
+    /**
+     * 설정한 Header가 없는 요청 처리
+     *
+     * @return
+     */
+    @RequestMapping(
+            value = "/header2",
+            headers = "!" + HttpHeaders.FROM
+    )
+    @ResponseBody
+    public String headerNotRequest() {
+        return "header2";
+    }
+
+    /**
+     * 특정한 Header Key&Value가 있는 요청 처리
+     *
+     * @return
+     */
+    @RequestMapping(
+            value = "/header3",
+            headers = HttpHeaders.AUTHORIZATION + "=" + "123"
+    )
+    @ResponseBody
+    public String headerKeyValueRequest() {
+        return "header3";
     }
 
 }
