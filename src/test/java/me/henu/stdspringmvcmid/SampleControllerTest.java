@@ -20,40 +20,18 @@ public class SampleControllerTest {
     MockMvc mockMvc;
 
     /**
-     * 특정한 요청 매개변수(Parameter) Key를 가지고 있는 요청 처리 테스트
+     * HTTP HEAD와 OPTION 요청 처리 테스트
+     * Spring MVC에서 구현하지 않아도 자동으로 처리하는 HTTP Method들이 있음
+     * - HEAD : GET 요청과 동일하지만 응답 본문(Body)을 받아오지 않고 응답 Header만 받아옴
+     * - OPTION : 요청에 사용할 수 있는 HTTP Method 목록을 제공함
+     * ㅇㅇ
      *
      * @throws Exception
      */
     @Test
-    public void paramKeyRequestTest() throws Exception {
-        this.mockMvc.perform(get("/param1")
+    public void helloTest() throws Exception {
+        this.mockMvc.perform(head("/hello") // HEAD 요청
                 .param("name", "henu"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    /**
-     * 특정한 요청 매개변수(Parameter) Key를 가지고 있는 않는 요청 처리 테스트
-     *
-     * @throws Exception
-     */
-    @Test
-    public void paramNotKeyRequestTest() throws Exception {
-        this.mockMvc.perform(get("/param2")
-                .param("age", "29"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    /**
-     * 특정한 요청 매개변수(Parameter) Key&Value 가지고 있는 요청 처리 테스트
-     *
-     * @throws Exception
-     */
-    @Test
-    public void paramKeyValueRequestTest() throws Exception {
-        this.mockMvc.perform(get("/param3")
-                .param("job", "developer"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
