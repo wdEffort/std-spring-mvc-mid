@@ -2,22 +2,21 @@ package me.henu.stdspringmvcmid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class SampleController {
 
-    /**
-     * 특정한 요청 매개변수(Parameter) Key를 가지고 있는 요청 처리
-     *
-     * @return
-     */
-    @GetMapping(
-            value = "/hello",
-            params = "name"
-    )
+    @GetMapping("/hello")
     @ResponseBody
-    public String hello() {
+    public String helloGet() {
+        return "hello";
+    }
+
+    @PostMapping("/hello")
+    @ResponseBody
+    public String helloPost() {
         return "hello";
     }
 
