@@ -20,13 +20,16 @@ public class SampleControllerTest {
     MockMvc mockMvc;
 
     /**
+     * URI 패턴의 일부를 값으로 처리하는 @PathVariable 어노테이션 사용 테스트
+     *
      * @throws Exception
      */
     @Test
     public void helloTest() throws Exception {
-        this.mockMvc.perform(get("/hello")) // OPTIONS 요청
+        this.mockMvc.perform(get("/events/1"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
 
 }
