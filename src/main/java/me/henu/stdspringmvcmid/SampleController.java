@@ -6,6 +6,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class SampleController {
 
@@ -26,35 +29,45 @@ public class SampleController {
     }
 
     /**
-     * 바인딩 이후 검증 작업 처리하기(Validation)
-     * JSR-303이 지원하는 @Valid 또는 @Validated(그룹 Validation 지원) 어노테이션 이용
+     * 새로운 이벤트 생성
      *
      * @param event
      * @param bindingResult
      * @return
-     * @Validated 검증 작업을 처리하고, 에러가 발생한다면 BindingResult 타입의 변수에 담아줌
-     * [특징]
-     * 1. @Valid 어노테이션과 달리 검증 작업을 처리할 때 그룹을 지정할 수 있음
-     * - @Validated(Event.ValidateName.class)과 같이 그룹을 지정하면 다른 Validation 설정은 검증 처리를 하지 않음
-     * (
-     * ex. Event 클래스의 limit 멤버 변수에 @Min이 설정되어 있어도 검증 처리를 하지 않음.
-     * => limit 멤버 변수에 값이 잘못 바인딩이 되어도 에러가 BindingResult 타입의 변수에 담기지 않음
-     * )
      */
     @PostMapping("/events")
-    @ResponseBody
-    public Event createEvent(@Validated(Event.ValidateName.class) @ModelAttribute Event event, BindingResult bindingResult) {
+    public String createEvent(
+            @Validated @ModelAttribute Event event,
+            BindingResult bindingResult,
+            Model model) {
         // BindingResult 타입의 변수에 에러가 있으면 if문 동작
         if (bindingResult.hasErrors()) {
-            System.out.println("Binding Error catched!");
-
-            // 객체의 정보 출력
-            bindingResult.getAllErrors().forEach(c -> {
-                System.out.println(c);
-            });
+            return "events/form"; // View에서 바인딩 에러를 보여줄 수 있음(Thymeleaf, JSP 마다 사용법이 있으니 참고...)
         }
 
-        return event;
+        List<Event> events = new ArrayList<>();
+        events.add(event);
+
+        model.addAttribute("eventList", events);
+
+        // POST > Redirect > GET 패턴 적용
+        return "redirect:/events/list";
+    }
+
+    @GetMapping("/events/list")
+    public String getEvents(Model model) {
+        // DB를 사용하고 있지 않기 때문에 덤프 Event 객체 생성
+        Event event = new Event();
+        event.setId(1);
+        event.setName("Spring");
+        event.setLimit(50);
+
+        List<Event> events = new ArrayList<>();
+        events.add(event);
+
+        model.addAttribute("eventList", events);
+
+        return "events/list";
     }
 
 }
