@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,16 +15,19 @@ public class SampleController {
 
     /**
      * 이벤트를 입력하는 페이지로 이동
+     * HttpSession 객체를 이용하여 Session에 값을 넣고, 뺴는 것이 가능함.
      *
      * @param model
      * @return
      */
     @GetMapping("/events/form")
-    public String eventsForm(Model model) {
+    public String eventsForm(Model model, HttpSession httpSession) {
         Event newEvent = new Event();
         newEvent.setLimit(50);
 
         model.addAttribute("event", newEvent); // Form backing object
+
+        httpSession.setAttribute("event", newEvent);
 
         return "events/form";
     }
