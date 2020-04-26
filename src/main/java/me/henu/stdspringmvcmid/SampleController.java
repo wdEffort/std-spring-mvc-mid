@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import javax.validation.Valid;
 
 @Controller
 public class SampleController {
@@ -27,17 +27,17 @@ public class SampleController {
     }
 
     /**
-     * 단순 타입 데이터를 복합 타입 객체로 바인딩 시킬때 예외 상황 처리하기
-     * ModelAttribute 어노테이션을 사용한 메소드 아규먼트 바로 오른쪽에 BindingResult 타입의 변수를 선언하면
-     * Binding과 관련된 에러(BindingException)가 바로 던져지는게 아니라 담기게 되며 요청은 정상적으로 처리됨.
-     * BindingResult 타입의 변수를 사용해서 부가적인 처리가 가능함.(ex. 바인딩이 잘못 되었을 때 다시 View를 보여주며 사용자한테 메시지를 띄워주는 처리)
+     * 바인딩 이후 검증 작업 처리하기(Validation)
+     * JSR-303이 지원하는 @Valid 또는 @Validated(그룹 Validation 지원) 어노테이션 이용
      *
      * @param event
+     * @param bindingResult
      * @return
+     * @Valid 검증 작업을 처리하고, 에러가 발생한다면 BindingResult 타입의 변수에 담아줌
      */
     @PostMapping("/events")
     @ResponseBody
-    public Event createEvent(@ModelAttribute Event event, BindingResult bindingResult) {
+    public Event createEvent(@Valid @ModelAttribute Event event, BindingResult bindingResult) {
         // BindingResult 타입의 변수에 에러가 있으면 if문 동작
         if (bindingResult.hasErrors()) {
             System.out.println("Binding Error catched!");

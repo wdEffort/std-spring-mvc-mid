@@ -1,11 +1,15 @@
 package me.henu.stdspringmvcmid;
 
+import javax.validation.constraints.Min;
+
 public class Event {
 
     private Integer id;
 
     private String name;
 
+    // JSR-303이 지원하는 Validation 어노테이션 사용
+    @Min(0)
     private Integer limit;
 
     public Integer getId() {

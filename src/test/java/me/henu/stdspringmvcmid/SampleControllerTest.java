@@ -43,7 +43,7 @@ public class SampleControllerTest {
         this.mockMvc.perform(post("/events")
                 .param("id", "1")
                 .param("name", "spring")
-                .param("limit", "abcd")) // Binding Exception 발생
+                .param("limit", "-10")) // Validation 처리를 위한 Parameter 전달
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
