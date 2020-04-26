@@ -19,16 +19,17 @@ public class SampleControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+
     /**
-     * URI 패턴의 일부를 값으로 처리하는 방법 테스트
+     * 요청 매개변수 처리 테스트
      *
      * @throws Exception
-     * @PathVariable URI Path를 값으로 받아서 처리
-     * @MatrixVariable URI 패턴에서 Key/Value 쌍의 데이터를 받아서 처리
+     * @RequestParam 요청 매개변수 값을 처리할 수 있음
      */
     @Test
     public void helloTest() throws Exception {
-        this.mockMvc.perform(get("/events/1;name=spring"))
+        this.mockMvc.perform(post("/events?name=spring")
+                .param("id", "1")) // 요청 Parameter 설정
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
