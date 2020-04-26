@@ -3,6 +3,7 @@ package me.henu.stdspringmvcmid;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -11,8 +12,7 @@ public class SampleController {
     /**
      * 요청 매개변수(URL Query Parameter, HTTP Form 데이터)를 @RequestParam 어노테이션을 사용하여 처리하기
      *
-     * @param id
-     * @param eventName
+     * @param params
      * @return
      * @RequestParam 요청 매개변수에 있는 단순 타입 데이터를 메소드 아규먼트로 받아올 수 있음
      * [특징]
@@ -25,12 +25,10 @@ public class SampleController {
      */
     @PostMapping("/events")
     @ResponseBody
-    public Event getEvent(
-            @RequestParam Integer id,
-            @RequestParam(value = "name", required = false, defaultValue = "henu") String eventName) {
+    public Event getEvent(@RequestParam Map<String, String> params) {
         Event event = new Event();
-        event.setId(id);
-        event.setName(eventName);
+        event.setId(Integer.parseInt(params.get("id")));
+        event.setName(params.get("name"));
 
         return event;
     }
