@@ -40,8 +40,10 @@ public class SampleControllerTest {
      */
     @Test
     public void createEvent() throws Exception {
-        this.mockMvc.perform(post("/events?name=spring")
-                .param("id", "1"))
+        this.mockMvc.perform(post("/events")
+                .param("id", "1")
+                .param("name", "spring")
+                .param("limit", "50"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
