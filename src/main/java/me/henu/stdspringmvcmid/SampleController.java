@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,8 +94,25 @@ public class SampleController {
         return "redirect:/events/list";
     }
 
+    /**
+     * 이벤트 목록 페이지로 이동
+     *
+     * @param model
+     * @param localDateTime
+     * @return
+     * @SessionAttribute 어노테이션을 사용하면 HTTP Session에 들어있는 값을 참조할 수 있음.
+     * [특징]
+     * 1. @SessionAttributes와 @SessionAttribute는 다름.
+     * - @SessionAttributes는 해당 컨트롤러 내에서만 동작.(해당 컨트롤러 안에서 다루는 특정 Model 객체를 세션에 넣고 공유할 때 사용)
+     * - @SessionAttribute는 컨트롤러 밖(인터셉터 또는 필터 등)에서 만들어진 세션 데이터에 접근할 때 사용.
+     * 2. 메소드 아규먼트 이름을 설정하고 싶을 때에는 어노테이션에 이름을 설정하면 됨.
+     * 3. 타입 변환을 지원
+     * - HttpSession 객체를 사용하여 세션 데이터에 접근해도 되지만, 타입 변환을 지원하지 않음.(Object 타입으로 가져오니 형변환을 직접해야 함.)
+     */
     @GetMapping("/events/list")
-    public String getEvents(Model model) {
+    public String getEvents(Model model, @SessionAttribute("visitTime") LocalDateTime localDateTime) {
+        System.out.println(localDateTime);
+
         // DB를 사용하고 있지 않기 때문에 덤프 Event 객체 생성
         Event event = new Event();
         event.setId(1);

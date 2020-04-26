@@ -1,6 +1,7 @@
 package me.henu.stdspringmvcmid;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.util.UrlPathHelper;
@@ -20,5 +21,15 @@ public class WebConfig implements WebMvcConfigurer {
         UrlPathHelper urlPathHelper = new UrlPathHelper();
         urlPathHelper.setRemoveSemicolonContent(false); // URI 패턴에 ';'를 없에지 않도록 설정
         configurer.setUrlPathHelper(urlPathHelper);
+    }
+
+    /**
+     * HandlerInterceptor 추가
+     *
+     * @param registry
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new VisitTimeInterceptor()); // 모든 요청 처리전 해당 인터셉터가 호출됨.
     }
 }
