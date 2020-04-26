@@ -19,17 +19,29 @@ public class SampleControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-
     /**
-     * 요청 매개변수 처리 테스트
+     * 이벤트 페이지 요청 테스트
      *
      * @throws Exception
-     * @RequestParam 요청 매개변수 값을 처리할 수 있음
      */
     @Test
-    public void helloTest() throws Exception {
+    public void eventFormTest() throws Exception {
+        this.mockMvc.perform(get("/events/form"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("events/form")) // View 이름이 "/events/form" 인지 확인 확인
+                .andExpect(model().attributeExists("event")); // Model에 "event"라는 이름을 가진 객체가 있는지 확인 ;
+    }
+
+    /**
+     * 새로운 이벤트 생성 테스트
+     *
+     * @throws Exception
+     */
+    @Test
+    public void createEvent() throws Exception {
         this.mockMvc.perform(post("/events?name=spring")
-                .param("id", "1")) // 요청 Parameter 설정
+                .param("id", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
