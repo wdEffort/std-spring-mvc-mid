@@ -5,11 +5,10 @@
     <title>Create New Event</title>
 </head>
 <body>
-<form action="#" th:action="@{/events}" method="post" th:object="${event}">
+<form action="#" th:action="@{/events/form/name}" method="post" th:object="${event}">
     <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect name</p>
-    <p th:if="${#fields.hasErrors('limit')}" th:errors="*{limit}">Incorrect limit</p>
+    <label for="name">name : </label>
     <input type="text" title="name" th:field="*{name}"/>
-    <input type="text" title="limit" th:field="*{limit}"/>
     <input type="submit" value="Create"/>
 </form>
 </body>
