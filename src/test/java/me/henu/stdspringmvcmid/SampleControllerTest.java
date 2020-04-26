@@ -43,7 +43,7 @@ public class SampleControllerTest {
         this.mockMvc.perform(post("/events")
                 .param("id", "1")
                 .param("name", "spring")
-                .param("limit", "50"))
+                .param("limit", "abcd")) // Binding Exception 발생
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
