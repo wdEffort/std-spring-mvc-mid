@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -62,6 +63,26 @@ public class SampleControllerTest {
         Map<String, Object> model = mav.getModel(); // ModelAndView 객체에서 Model 객체를 꺼냄
 
         System.out.println(model.size());
+    }
+
+    /**
+     * Flash Attributes 사용 테스트
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getEvents() throws Exception {
+        Event newEvent = new Event();
+        newEvent.setId(1);
+        newEvent.setName("spring jpa");
+        newEvent.setLimit(10);
+
+        this.mockMvc.perform(get("/events/list")
+                .sessionAttr("visitTime", LocalDateTime.now()) // HTTP Session에 "visitTime" 저장
+                .flashAttr("newEvent", newEvent)) // Flash Attributes에 "newEvent" 저장
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(xpath("//li").nodeCount(2)); // <li> Element가 2개 있는지 확인
     }
 
 }

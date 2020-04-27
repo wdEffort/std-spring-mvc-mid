@@ -63,12 +63,19 @@ public class SampleController {
 
     /**
      * 이벤트 참여자수를 처리
-     * RedirectAttribute를 사용하여 Spring Boot의 Ignore-default-model-on-redirect 프로퍼티 설정이 기본값(true)이어도
-     * 리다이렉트 할 때 URI Query Parameter을 전달할 수 있음.
+     * RedirectAttributes는 리다이렉트를 할 때 어떤 데이터를 URI Query Parameter로 전달하는 역할을 하는데
+     * 이때 데이터는 URI Query Parameter에 붙을 수 있어야 하기 때문에 전부 "문자열"로 변환이 가능해야 함.
+     * (즉, 복합 객체 타입의 경우 기본적으로 사용이 불가능)
+     * <p>
+     * 리다이렉트를 할 때 복합 객체 타입을 전달하기 위해서는
+     * RedirectAttributes의 "Flash Attributes"를 사용해야 함.
      * <p>
      * [특징]
-     * 1. RedirectAttributes의 addAttribute() 메소드를 이용하여 명시한 것들만 URI Query Parameter로 전달됨.
-     * 2. 리다이렉트 되는 쪽에서 @RequestParam 또는 @ModelAttribute를 사용하여 받아서 사용가능함.
+     * 1. 데이터가 URI에 노출되지 않음.
+     * 2. 임의의 객체를 지정할 수 있음.
+     * 3. 보통 HTTP Session을 많이 사용함.(=> 1회성)
+     * - 리다이렉트 하기 전에 데이터를 HTTP Session에 저장하고, 리다이렉트 요청을 처리한 후 즉시 제거하는 방법으로 사용.
+     * - Model 또는 @ModelAttribute를 사용하여 꺼내 쓸 수 있음.
      *
      * @param event
      * @param bindingResult
@@ -88,35 +95,34 @@ public class SampleController {
 
         sessionStatus.setComplete();
 
-        // RedirectAttributes에 명시한 것들만 URI Query Parameter로 전달됨.
-        redirectAttributes.addAttribute("name", event.getName());
-        redirectAttributes.addAttribute("limit", event.getLimit());
+        // 리다이렉트 할 때 HTTP Session에 "newEvent"라는 이름으로 객체를 담아서 보냄.
+        redirectAttributes.addFlashAttribute("newEvent", event);
 
         return "redirect:/events/list";
     }
 
     /**
      * 이벤트 목록 조회
-     * RedirectAttributes를 사용하여 URI Query Parameter 데이터를 @ModelAttribute로 복합 객체 타입으로 받을 때
-     * @SessionAttributes 어노테이션에 설정한 이름과 동일하면, 간혹 Session에 설정한 이름과 동일한 객체가 없다면 에러가 발생하므로
-     * 이름을 다르게 설정하는 것이 좋음.
+     * Flash Attributes를 사용하게 되면 HTTP Session에 데이터가 담긴 채로 리다이렉트 되므로
+     * 요청 처리시 꺼내서(Model 또는 @ModelAttribute 이용) 사용할 수 있음.
      *
-     * @param event
      * @param model
      * @param localDateTime
      * @return
      */
     @GetMapping("/events/list")
     public String getEvents(
-            @ModelAttribute("newEvent") Event event, // @SessionAttributes에 설정한 이름과 다르므로, URI Query Parameter 데이터를 복합 객체 타입으로 받아옴
             Model model,
             @SessionAttribute("visitTime") LocalDateTime localDateTime) {
         System.out.println(localDateTime);
 
         // DB를 사용하지 않기 때문에 덤프 이벤트 객체 생성
-        Event newEvent = new Event();
-        newEvent.setName("spring mvc");
-        newEvent.setLimit(20);
+        Event event = new Event();
+        event.setName("spring mvc");
+        event.setLimit(20);
+
+        // HTTP Session에서 "newEvent"라는 이름을 가진 객체를 Model을 이용하여 꺼냄
+        Event newEvent = (Event) model.asMap().get("newEvent");
 
         List<Event> events = new ArrayList<>();
         events.add(event);
