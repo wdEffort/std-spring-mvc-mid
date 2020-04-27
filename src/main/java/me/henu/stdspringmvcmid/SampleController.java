@@ -97,34 +97,30 @@ public class SampleController {
 
     /**
      * 이벤트 목록 조회
+     * RedirectAttributes를 사용하여 URI Query Parameter 데이터를 @ModelAttribute로 복합 객체 타입으로 받을 때
+     * @SessionAttributes 어노테이션에 설정한 이름과 동일하면, 간혹 Session에 설정한 이름과 동일한 객체가 없다면 에러가 발생하므로
+     * 이름을 다르게 설정하는 것이 좋음.
      *
-     * @param name
-     * @param limit
+     * @param event
      * @param model
      * @param localDateTime
      * @return
      */
     @GetMapping("/events/list")
     public String getEvents(
-            @RequestParam String name,
-            @RequestParam Integer limit,
+            @ModelAttribute("newEvent") Event event, // @SessionAttributes에 설정한 이름과 다르므로, URI Query Parameter 데이터를 복합 객체 타입으로 받아옴
             Model model,
             @SessionAttribute("visitTime") LocalDateTime localDateTime) {
         System.out.println(localDateTime);
 
-        // 리다이렉트로 받아온 URI Query Parameter를 사용하여 이벤트 객체 생성
-        Event newEvent = new Event();
-        newEvent.setName(name);
-        newEvent.setLimit(limit);
-
         // DB를 사용하지 않기 때문에 덤프 이벤트 객체 생성
-        Event event = new Event();
-        event.setName("spring mvc");
-        event.setLimit(20);
+        Event newEvent = new Event();
+        newEvent.setName("spring mvc");
+        newEvent.setLimit(20);
 
         List<Event> events = new ArrayList<>();
-        events.add(newEvent);
         events.add(event);
+        events.add(newEvent);
 
         model.addAttribute("eventList", events);
 
