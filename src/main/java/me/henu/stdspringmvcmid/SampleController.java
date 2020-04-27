@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -62,11 +63,17 @@ public class SampleController {
 
     /**
      * 이벤트 참여자수를 처리
+     * RedirectAttribute를 사용하여 Spring Boot의 Ignore-default-model-on-redirect 프로퍼티 설정이 기본값(true)이어도
+     * 리다이렉트 할 때 URI Query Parameter을 전달할 수 있음.
+     * <p>
+     * [특징]
+     * 1. RedirectAttributes의 addAttribute() 메소드를 이용하여 명시한 것들만 URI Query Parameter로 전달됨.
+     * 2. 리다이렉트 되는 쪽에서 @RequestParam 또는 @ModelAttribute를 사용하여 받아서 사용가능함.
      *
      * @param event
      * @param bindingResult
      * @param sessionStatus
-     * @param model
+     * @param redirectAttributes
      * @return
      */
     @PostMapping("/events/form/limit")
@@ -74,35 +81,49 @@ public class SampleController {
             @Validated @ModelAttribute Event event,
             BindingResult bindingResult,
             SessionStatus sessionStatus,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "events/form-limit";
         }
 
         sessionStatus.setComplete();
 
-        // RedirectAttributes를 사용하지 않는 상황에서
-        // 리다이렉트할 때 Model에 들어있는 데이저 중에 Pirimitive type(기본 타입)은 URI Query Parameter로 추가가 됨.
-        // 단, Spring Boot에서는 이 기능이 기본적으로 비활성화 되어있음.
-        // 활성화 시키기 위해서는 Ignore-default-model-on-redirect 프로퍼티를 사용해서 활성화시킬 수 있다.
-        // 리다이렉트가 되는 쪽에서 @PathVariable 또는 @ModelAttribute를 이용하여 URI Query Parameter를 사용할 수 있음.
-        model.addAttribute("name", event.getName());
-        model.addAttribute("limit", event.getLimit());
+        // RedirectAttributes에 명시한 것들만 URI Query Parameter로 전달됨.
+        redirectAttributes.addAttribute("name", event.getName());
+        redirectAttributes.addAttribute("limit", event.getLimit());
 
-        return "redirect:/events/list"; // "redirect:/events/list?name=spring&limit=50" URI를 요청하는 것과 같음.
+        return "redirect:/events/list";
     }
 
+    /**
+     * 이벤트 목록 조회
+     *
+     * @param name
+     * @param limit
+     * @param model
+     * @param localDateTime
+     * @return
+     */
     @GetMapping("/events/list")
-    public String getEvents(Model model, @SessionAttribute("visitTime") LocalDateTime localDateTime) {
+    public String getEvents(
+            @RequestParam String name,
+            @RequestParam Integer limit,
+            Model model,
+            @SessionAttribute("visitTime") LocalDateTime localDateTime) {
         System.out.println(localDateTime);
 
-        // DB를 사용하고 있지 않기 때문에 덤프 Event 객체 생성
+        // 리다이렉트로 받아온 URI Query Parameter를 사용하여 이벤트 객체 생성
+        Event newEvent = new Event();
+        newEvent.setName(name);
+        newEvent.setLimit(limit);
+
+        // DB를 사용하지 않기 때문에 덤프 이벤트 객체 생성
         Event event = new Event();
-        event.setId(1);
-        event.setName("Spring");
-        event.setLimit(50);
+        event.setName("spring mvc");
+        event.setLimit(20);
 
         List<Event> events = new ArrayList<>();
+        events.add(newEvent);
         events.add(event);
 
         model.addAttribute("eventList", events);
