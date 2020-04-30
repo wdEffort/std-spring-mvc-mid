@@ -66,7 +66,7 @@ public class EventControllerTest {
     }
 
     /**
-     * Flash Attributes 사용 테스트
+     * Flash Attributes 사용, @ModelAttribute 테스트
      *
      * @throws Exception
      */
@@ -82,6 +82,7 @@ public class EventControllerTest {
                 .flashAttr("newEvent", newEvent)) // Flash Attributes에 "newEvent" 저장
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(model().attributeExists("categories")) // Model에 "categories"라는 이름의 객체가 있는지 확인
                 .andExpect(xpath("//li").nodeCount(2)); // <li> Element가 2개 있는지 확인
     }
 

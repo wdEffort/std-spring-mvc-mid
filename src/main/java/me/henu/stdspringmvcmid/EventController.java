@@ -17,9 +17,41 @@ import java.util.List;
 public class EventController {
 
     /**
-     * 이벤트를 이름을 입력하는 페이지로 이동
+     * @ModelAttribute의 또다른 사용법
+     * 1. @RequestMapping을 사용한 핸들러 메소드의 아규먼트에 사용.
+     * 2. @Controller 또는 @ControllerAdvice 어노테이션을 사용한 Class에서 모델 정보를 초기화 할 때 사용.
+     * - Controller 안에서 모두 공통적으로 참고해야하는 모델 정보가 있어야 하는 경우 사용.
+     * 3. @RequestMapping 어노테이선과 함께 사용하면 해당 메소드에서 리턴하는 객체를 모델에 넣어 줌.
+     * - 만약, View를 설정해야 하는 경우 RequestToViewNameTranslator 인터페이스가 요청 URI과 일치하는 View를 리턴해 줌으로써 동작함.
+     */
+
+    /**
+     * 이벤트 카테고리 모델 생성
+     * Contorller 안에서 모두 공통적으로 참고 할 수 있음.
      *
      * @param model
+     */
+//    @ModelAttribute
+//    public void categories(Model model) {
+//        model.addAttribute("categories", List.of("study", "seminar", "hobby", "social"));
+//    }
+
+    /**
+     * 이벤트 카테고리 모델 생성
+     * Contorller 안에서 모두 공통적으로 참고 할 수 있음.
+     * 위 메소드와 달리 메소드 리턴 타입을 지정한 경우 @ModelAttribute에 모델 이름을 지정하여 사용이 가능함.
+     *
+     * @param model
+     * @return
+     */
+    @ModelAttribute("categories")
+    public List<String> categories(Model model) {
+        return List.of("study", "seminar", "hobby", "social");
+    }
+
+    /**
+     * 이벤트를 이름을 입력하는 페이지로 이동
+     *
      * @return
      */
     @GetMapping("/events/form/name")
