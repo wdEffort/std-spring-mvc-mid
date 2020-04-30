@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @SessionAttributes("event")
-public class SampleController {
+public class EventController {
 
     /**
      * 이벤트를 이름을 입력하는 페이지로 이동
