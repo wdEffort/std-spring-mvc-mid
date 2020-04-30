@@ -28,6 +28,16 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!--
+        https://mvnrepository.com/artifact/org.apache.tika/tika-core
+        미디어 타입을 알아낼 수 있는 라이브러리 의존성 설정
+        -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>1.20</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
