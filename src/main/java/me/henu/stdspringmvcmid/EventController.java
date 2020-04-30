@@ -21,20 +21,9 @@ public class EventController {
      * 1. @RequestMapping을 사용한 핸들러 메소드의 아규먼트에 사용.
      * 2. @Controller 또는 @ControllerAdvice 어노테이션을 사용한 Class에서 모델 정보를 초기화 할 때 사용.
      * - Controller 안에서 모두 공통적으로 참고해야하는 모델 정보가 있어야 하는 경우 사용.
-     * 3. @RequestMapping 어노테이선과 함께 사용하면 해당 메소드에서 리턴하는 객체를 모델에 넣어 줌.
-     * - 만약, View를 설정해야 하는 경우 RequestToViewNameTranslator 인터페이스가 요청 URI과 일치하는 View를 리턴해 줌으로써 동작함.
+     * 3. @RequestMapping 어노테이선과 함께 사용하면 해당 메소드에서 리턴하는 객체를 모델에 넣어 줌.(잘 사용하지 않음...)
+     * - View 이름은 RequestToViewNameTranslator 인터페이스가 요청 URI과 정확히 일치하는 View 이름으로 리턴해 줌으로써 설정됨.
      */
-
-    /**
-     * 이벤트 카테고리 모델 생성
-     * Contorller 안에서 모두 공통적으로 참고 할 수 있음.
-     *
-     * @param model
-     */
-//    @ModelAttribute
-//    public void categories(Model model) {
-//        model.addAttribute("categories", List.of("study", "seminar", "hobby", "social"));
-//    }
 
     /**
      * 이벤트 카테고리 모델 생성
@@ -51,13 +40,16 @@ public class EventController {
 
     /**
      * 이벤트를 이름을 입력하는 페이지로 이동
+     * 해당 메소드와 같이 @ReuqestMapping + @ModelAttribute 조합인 경우
+     * 리턴하는 객체를 자동으로 Model에 담아주게 됨.(이러한 경우 @ModelAttribute는 생략 가능.)
+     * View 이름 처리는 RequestToViewNameTranslator 인터페이스를 이용하여 처리됨.
      *
      * @return
      */
-    @GetMapping("/events/form/name")
-    public String eventsFormName(Model model) {
-        model.addAttribute("event", new Event());
-        return "events/form-name";
+    @GetMapping("/events/form-name")
+    @ModelAttribute
+    public Event eventsFormName() {
+        return new Event();
     }
 
     /**
