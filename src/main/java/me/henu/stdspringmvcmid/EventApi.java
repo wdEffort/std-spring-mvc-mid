@@ -1,32 +1,35 @@
 package me.henu.stdspringmvcmid;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/events")
 public class EventApi {
 
+
     /**
-     * @ResponseBody와 비슷하지만, 요청 헤더 정보까지 가져오기 위해서는 HttpEntity<T>를 사용해야 함.
-     * - HttpMessageConverter를 이용하여 요청 본문 데이터를 객체로 변환할 수 있음.
-     * - 요청 본문 데이터를 변환한 객체의 타입을 제네릭 타입으로 설정.
+     * HttpEntity<T>, @RequestBody 모두 @Valid 또는 @Validated를 사용해서 값을 검증 할 수 있음.
      *
-     * @param request
+     * @param event
      * @return
      */
     @PostMapping
-    public Event createEvent(HttpEntity<Event> request) {
+    public Event createEvent(@RequestBody @Valid Event event, BindingResult bindingResult) {
         // DB가 있다면 이벤트를 저장할 수 있음.
 
-        // 요청 헤더 정보에 접근해서 Content-Type 추출.
-        MediaType contentType = request.getHeaders().getContentType();
-        System.out.println(contentType);
+        // BindingResult에 에러가 담긴 경우
+        // 에러 본문에 원하는 응답을 넣거나, 상태값을 좀 더 구체적으로 바꿔주거나 등
+        // 원하는 처리를 할 수 있음.
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(error -> {
+                System.out.println(error);
+            });
+        }
 
-        return request.getBody(); // 제네릭 타입에 해당하는 본문을 반환함.
+        return event;
     }
 
 

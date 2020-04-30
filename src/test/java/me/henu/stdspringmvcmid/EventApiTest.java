@@ -1,5 +1,6 @@
 package me.henu.stdspringmvcmid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ public class EventApiTest {
     MockMvc mockMvc;
 
     /**
-     * 요청 본문 데이터를 객체로 변환하는 테스트
+     * 요청 본문 데이터를 객체로 변환할 때 검증처리 테스트
      *
      * @throws Exception
      */
@@ -38,7 +39,7 @@ public class EventApiTest {
         Event event = new Event();
         event.setId(1);
         event.setName("spring");
-        event.setLimit(50);
+        event.setLimit(-50);
 
         // 객체를 JSON 문자열로 변환
         String json = objectMapper.writeValueAsString(event);
@@ -49,7 +50,7 @@ public class EventApiTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("spring"))
-                .andExpect(jsonPath("limit").value(50));
+                .andExpect(jsonPath("limit").value(-50));
     }
 
 }
