@@ -1,6 +1,5 @@
 package me.henu.stdspringmvcmid;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -30,7 +28,7 @@ public class EventApiTest {
     MockMvc mockMvc;
 
     /**
-     * 요청 본문 데이터를 객체로 변환할 때 검증처리 테스트
+     * 응답 본문 메시지 전달 테스트
      *
      * @throws Exception
      */
@@ -49,9 +47,7 @@ public class EventApiTest {
                 .content(json) // 요청 본문 설정.
                 .accept(MediaType.APPLICATION_JSON)) // 요청이 어떠한 타입의 응답을 원하는지 설정
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("name").value("spring"))
-                .andExpect(jsonPath("limit").value(-50));
+                .andExpect(status().isBadRequest());
     }
 
 }
