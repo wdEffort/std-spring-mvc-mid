@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -17,18 +18,27 @@ import java.util.List;
 public class EventController {
 
     /**
-     * @ModelAttribute의 또다른 사용법
-     * 1. @RequestMapping을 사용한 핸들러 메소드의 아규먼트에 사용.
-     * 2. @Controller 또는 @ControllerAdvice 어노테이션을 사용한 Class에서 모델 정보를 초기화 할 때 사용.
-     * - Controller 안에서 모두 공통적으로 참고해야하는 모델 정보가 있어야 하는 경우 사용.
-     * 3. @RequestMapping 어노테이선과 함께 사용하면 해당 메소드에서 리턴하는 객체를 모델에 넣어 줌.(잘 사용하지 않음...)
-     * - View 이름은 RequestToViewNameTranslator 인터페이스가 요청 URI과 정확히 일치하는 View 이름으로 리턴해 줌으로써 설정됨.
+     * @param webDataBinder 데이터 바인딩 또는 검증 설정을 커스터마이징 할 수 있는 클래스
+     * @InitBinder 특정 컨트롤러에서 데이터 바인딩 또는 검증 설정을 변경하고 싶을 때 사용.
+     * 1. 메소드 리턴 타입은 반드시 void로 설정해야 함.
+     * 2. 모든 요청 전에 반드시 호출하게 됨.
+     * 3. 특정 Model 객체에만 데이터 바인딩 또는 검증 설정을 적용하고 싶은 경우 이름을 지정해야 함.
      */
+    @InitBinder("event") // "event"라는 이름을 가진 Model 객체에만 데이터 바인딩, 검증 적용
+    public void initEventBinder(WebDataBinder webDataBinder) {
+        // URI Path, URI Query Parameter, HTTP Form Data를 통해
+        // 값을 저장시키고 싶지 않은 필드를 걸러냄.
+        webDataBinder.setDisallowedFields("id");
+        // webDataBinder.setAllowedFields(); // 값을 저장시킬 필드들을 설정.
+
+        // webDataBinder.addCustomFormatter(); // Formatter 설정.
+
+        webDataBinder.addValidators(new EventValidator()); // 커스텀한 Validator 설정.
+    }
+
 
     /**
      * 이벤트 카테고리 모델 생성
-     * Contorller 안에서 모두 공통적으로 참고 할 수 있음.
-     * 위 메소드와 달리 메소드 리턴 타입을 지정한 경우 @ModelAttribute에 모델 이름을 지정하여 사용이 가능함.
      *
      * @param model
      * @return
@@ -40,16 +50,14 @@ public class EventController {
 
     /**
      * 이벤트를 이름을 입력하는 페이지로 이동
-     * 해당 메소드와 같이 @ReuqestMapping + @ModelAttribute 조합인 경우
-     * 리턴하는 객체를 자동으로 Model에 담아주게 됨.(이러한 경우 @ModelAttribute는 생략 가능.)
-     * View 이름 처리는 RequestToViewNameTranslator 인터페이스를 이용하여 처리됨.
      *
      * @return
      */
-    @GetMapping("/events/form-name")
-    @ModelAttribute
-    public Event eventsFormName() {
-        return new Event();
+    @GetMapping("/events/form/name")
+    public String eventsFormName(Model model) {
+        model.addAttribute("event", new Event());
+
+        return "events/form-name";
     }
 
     /**
@@ -87,19 +95,6 @@ public class EventController {
 
     /**
      * 이벤트 참여자수를 처리
-     * RedirectAttributes는 리다이렉트를 할 때 어떤 데이터를 URI Query Parameter로 전달하는 역할을 하는데
-     * 이때 데이터는 URI Query Parameter에 붙을 수 있어야 하기 때문에 전부 "문자열"로 변환이 가능해야 함.
-     * (즉, 복합 객체 타입의 경우 기본적으로 사용이 불가능)
-     * <p>
-     * 리다이렉트를 할 때 복합 객체 타입을 전달하기 위해서는
-     * RedirectAttributes의 "Flash Attributes"를 사용해야 함.
-     * <p>
-     * [특징]
-     * 1. 데이터가 URI에 노출되지 않음.
-     * 2. 임의의 객체를 지정할 수 있음.
-     * 3. 보통 HTTP Session을 많이 사용함.(=> 1회성)
-     * - 리다이렉트 하기 전에 데이터를 HTTP Session에 저장하고, 리다이렉트 요청을 처리한 후 즉시 제거하는 방법으로 사용.
-     * - Model 또는 @ModelAttribute를 사용하여 꺼내 쓸 수 있음.
      *
      * @param event
      * @param bindingResult
@@ -127,8 +122,6 @@ public class EventController {
 
     /**
      * 이벤트 목록 조회
-     * Flash Attributes를 사용하게 되면 HTTP Session에 데이터가 담긴 채로 리다이렉트 되므로
-     * 요청 처리시 꺼내서(Model 또는 @ModelAttribute 이용) 사용할 수 있음.
      *
      * @param model
      * @param localDateTime
