@@ -37,7 +37,7 @@ public class EventApiTest {
         Event event = new Event();
         event.setId(1);
         event.setName("spring");
-        event.setLimit(-50);
+        event.setLimit(50);
 
         // 객체를 JSON 문자열로 변환
         String json = objectMapper.writeValueAsString(event);
@@ -47,7 +47,7 @@ public class EventApiTest {
                 .content(json) // 요청 본문 설정.
                 .accept(MediaType.APPLICATION_JSON)) // 요청이 어떠한 타입의 응답을 원하는지 설정
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isCreated());
     }
 
 }
