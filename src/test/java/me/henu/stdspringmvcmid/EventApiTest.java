@@ -46,7 +46,8 @@ public class EventApiTest {
 
         this.mockMvc.perform(post("/api/events")
                 .contentType(MediaType.APPLICATION_JSON_UTF8) // 요청 Header Content-Type 설정(사용할 HttpMesasgeConverter가 결정되는 요인임.)
-                .content(json)) // 요청 본문 설정.
+                .content(json) // 요청 본문 설정.
+                .accept(MediaType.APPLICATION_JSON)) // 요청이 어떠한 타입의 응답을 원하는지 설정
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("spring"))

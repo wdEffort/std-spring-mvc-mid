@@ -11,18 +11,17 @@ public class EventApi {
 
 
     /**
-     * HttpEntity<T>, @RequestBody 모두 @Valid 또는 @Validated를 사용해서 값을 검증 할 수 있음.
+     * 데이터를 응답 본문 메시지로 보내기
      *
      * @param event
      * @return
+     * @ResponseBody 메소드 리턴값을 HttpMessageConverter를 사용하여 HTTP 응답 본문(Body)에 담아줌.
+     * 요청 헤더 중 "Accept" 값을 참고하여 적절한 HttpMessageConverter 타입을 선택하여 사용하게 됨.
+     * 단, @RestController 어노테이션을 사용하는 Class라면 메소드마다 @ResponseBody를 설정하지 않아도 자동으로 모든 핸들러 메소드에 적용이 됨.
      */
     @PostMapping
+    //@ResponseBody
     public Event createEvent(@RequestBody @Valid Event event, BindingResult bindingResult) {
-        // DB가 있다면 이벤트를 저장할 수 있음.
-
-        // BindingResult에 에러가 담긴 경우
-        // 에러 본문에 원하는 응답을 넣거나, 상태값을 좀 더 구체적으로 바꿔주거나 등
-        // 원하는 처리를 할 수 있음.
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(error -> {
                 System.out.println(error);
@@ -31,6 +30,5 @@ public class EventApi {
 
         return event;
     }
-
 
 }
