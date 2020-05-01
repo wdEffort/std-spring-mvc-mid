@@ -18,24 +18,42 @@ import java.util.List;
 public class EventController {
 
     /**
-     * @param webDataBinder 데이터 바인딩 또는 검증 설정을 커스터마이징 할 수 있는 클래스
-     * @InitBinder 특정 컨트롤러에서 데이터 바인딩 또는 검증 설정을 변경하고 싶을 때 사용.
-     * 1. 메소드 리턴 타입은 반드시 void로 설정해야 함.
-     * 2. 모든 요청 전에 반드시 호출하게 됨.
-     * 3. 특정 Model 객체에만 데이터 바인딩 또는 검증 설정을 적용하고 싶은 경우 이름을 지정해야 함.
+     * 예외 처리 핸들러
+     * 특정 예외 발생시 에러 페이지를 보여주는 핸들러 정의
+     *
+     * @param exception
+     * @param model
+     * @return
+     * @ExceptionHandler 어노테이션 사용
+     * 1. 특정 예외가 발생한 요청을 직접 처리하는 핸들러를 정의할 수 있음.
+     * - 요청을 처리하는 핸들러 메소드와 비슷하지만 추가적으로 사용할 수 있는 메소드 아규먼트가 조금 다름.
+     * - 지원하는 메소드 아규먼트 : 처리하고 싶은 예외 객체, 핸들러 객체(=> Spring.io의 Spring Web MVC 레퍼런스 참고...)
+     * 2. REST API의 경우 응답 본문에 에러 정보를 담아주고, 상태 코드를 설정하려면 ResponseEntity를 주로 사용함.
+     * 3. 가장 구체적인 에러가 매핑이 됨.
+     * - 가령 EventException, RuntimeException 두 예외 핸들러가 있다고 하더라도 구체적인 에러 핸들러에 매핑이 됨.
      */
-    @InitBinder("event") // "event"라는 이름을 가진 Model 객체에만 데이터 바인딩, 검증 적용
-    public void initEventBinder(WebDataBinder webDataBinder) {
-        // URI Path, URI Query Parameter, HTTP Form Data를 통해
-        // 값을 저장시키고 싶지 않은 필드를 걸러냄.
-        webDataBinder.setDisallowedFields("id");
-        // webDataBinder.setAllowedFields(); // 값을 저장시킬 필드들을 설정.
-
-        // webDataBinder.addCustomFormatter(); // Formatter 설정.
-
-        webDataBinder.addValidators(new EventValidator()); // 커스텀한 Validator 설정.
+    @ExceptionHandler
+    public String eventErrorHandler(EventException exception, Model model) {
+        model.addAttribute("message", "Event error");
+        return "error";
     }
 
+    @ExceptionHandler
+    public String runtimeErrorHandler(RuntimeException exception, Model model) {
+        model.addAttribute("message", "Runtime error");
+        return "error";
+    }
+
+    /**
+     * 컨트롤러 안에서 데이터 바인딩 또는 검증 설정을 변경
+     *
+     * @param webDataBinder
+     */
+    @InitBinder("event")
+    public void initEventBinder(WebDataBinder webDataBinder) {
+        webDataBinder.setDisallowedFields("id");
+        webDataBinder.addValidators(new EventValidator());
+    }
 
     /**
      * 이벤트 카테고리 모델 생성
@@ -55,9 +73,9 @@ public class EventController {
      */
     @GetMapping("/events/form/name")
     public String eventsFormName(Model model) {
-        model.addAttribute("event", new Event());
-
-        return "events/form-name";
+        throw new EventException(); // 강제로 EventException 발생
+        //model.addAttribute("event", new Event());
+        //return "events/form-name";
     }
 
     /**
