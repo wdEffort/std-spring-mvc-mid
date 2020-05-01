@@ -31,15 +31,11 @@ public class EventController {
      * 2. REST API의 경우 응답 본문에 에러 정보를 담아주고, 상태 코드를 설정하려면 ResponseEntity를 주로 사용함.
      * 3. 가장 구체적인 에러가 매핑이 됨.
      * - 가령 EventException, RuntimeException 두 예외 핸들러가 있다고 하더라도 구체적인 에러 핸들러에 매핑이 됨.
+     * 4. 여러 에러를 같이 처리하고 싶은 경우 @ExceptionHandler에 배열로 설정할 수 있음.
+     * - 여러 에러를 같이 처리할 경우 두 에러 타입의 "상위 타입"으로 예외 아규먼트를 설정해야 함.
      */
-    @ExceptionHandler
-    public String eventErrorHandler(EventException exception, Model model) {
-        model.addAttribute("message", "Event error");
-        return "error";
-    }
-
-    @ExceptionHandler
-    public String runtimeErrorHandler(RuntimeException exception, Model model) {
+    @ExceptionHandler({EventException.class, RuntimeException.class})
+    public String eventErrorHandler(RuntimeException exception, Model model) {
         model.addAttribute("message", "Runtime error");
         return "error";
     }
